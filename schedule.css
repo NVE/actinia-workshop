@@ -1,0 +1,96 @@
+/***** Fonts *****/
+
+@font-face {
+    font-family: 'Chilanka';
+    src: url('./resources/fonts/Chilanka-Regular.woff2') format('woff2'), url('./resources/fonts/Chilanka-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/***** Defaults *****/
+
+body {
+    /* font-family: 'Kaisei HarunoUmi', serif; */
+    font-family: 'Chilanka', 'Open Sans', sans-serif;
+    min-height: 950px;
+    background: #fff;
+    background: url(./resources/img/newspaper-background-5.jpg);
+    background-position: unset;
+}
+
+h1 {
+    font-size: 2em;
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    color: #403c33;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    line-height: 1em;
+    font-weight: normal;
+}
+
+table {
+    table-layout: fixed ;
+    width: 100% ;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid;
+}
+td {
+    width: 24% ;
+    vertical-align: top;
+}
+
+h4 {
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+p {
+    font-size: 1em;
+    text-align: justify;
+}
+
+li {
+    margin: 0.2em;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    padding: 0;
+}
+
+a:hover,
+a:focus {
+    color: rgb(103, 103, 103);
+}
+
+pre {
+    font-size: smaller;
+}
+
+code {
+    background-color: #f4f3efa6!important;
+}
+
+hr {
+    border-width: 2px;
+    border-style: solid;
+} */
+
+/**************************/
+
+#toc {
+    padding: 20px;
+    font-size: 20px;
+    line-height: 1.2;
+    background: rgba(210,210,210,0.5);
+}

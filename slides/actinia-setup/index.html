@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <title>actinia setup</title>
+    <link rel="shortcut icon" href="resources/img/mundialis_bildmarke_web.ico" type="image/x-icon">
+    <meta name="description" content="actinia setup" />
+    <meta name="author" content="Carmen Tawalika" />
+    <link rel="stylesheet" href="./extras/highlight/styles/github.css">
+    <link rel="stylesheet" href="./extras/mermaid/mermaid.css">
+    <link href="./css/impress-common.css" rel="stylesheet" />
+    <link href="./css/index.css" rel="stylesheet" />
+
+</head>
+
+<body class="impress-not-supported">
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="bg-shade"></div>
+
+<div id="impress"
+    data-transition-duration="1000"
+    data-width="1920"
+    data-height="1080"
+    data-perspective="1000"
+    >
+
+    <div class="step slide title" data-x="-2200" data-y="-3000" data-scale="50">
+        <h1>actinia setup <br />
+            Basics and Examples</h1>
+        </br></br>
+        <h2>Carmen Tawalika</h2>
+        <h3>mundialis 2023</h3>
+    </div>
+
+    <div id="toc" class="step slide" data-rel-x="0" data-rel-y="50000" data-scale="50">
+        <h1>Table of Contents</h1>
+        <ul>
+          <li><a href="#simple">Most simple setup</a></li>
+          <li><a href="#monitor">Equal Pods setup</a></li>
+          <li><a href="#hpc-overview">On-demand setup (HPC)</a></li>
+          <li><a href="#queue">Currently supported queue configuration</a></li>
+          <li><a href="#outlook">actinia in NVE..?</a></li>
+        </ul>
+    </div>
+
+    <!-- ------------------- -->
+
+    <div id="simple" class="step slide markdown" data-scale="50" data-rel-x="0" data-rel-y="50000">
+      # Most simple setup
+      - single actinia installation with redis database
+      - few processes can run in parallel inside single installation
+      - only if no heavy processing is expected
+      - is not using full potential of actinia
+      ![actinia and GRASS GIS](resources/img/actinia-grass.svg)
+      ![redis logo](resources/img/Redis_Logo.svg)
+    </div>
+
+    <!-- ------------------- -->
+
+    <div id="monitor" class="step slide overview markdown" data-scale="50" data-rel-x="100000" data-rel-y="0">
+      # Equal Pods setup
+    </div>
+
+    <div id="monitor3" class="step slide" data-scale="20" data-rel-x="0" data-rel-y="0">
+      <img src="resources/img/actinia-workshop.svg"/>
+    </div>
+
+    <div id="monitor4" class="step slide" data-rel-x="0" data-rel-y="0" data-scale="20">
+    <img src="resources/img/5_pre_cloud.svg"/>
+    </div>
+
+    <div id="monitor5" class="step slide" data-rel-x="0" data-rel-y="0" data-scale="20">
+    <img src="resources/img/5_pre2_cloud.svg"/>
+    </div>
+
+    <div id="monitor6" class="step slide" data-rel-x="0" data-rel-y="0" data-scale="41">
+      <h1>Equal Pods setup</h1>
+    <img src="resources/img/5_cloud.svg"/>
+    </div>
+
+    <div id="load_balancer" class="step slide" data-rel-x="0" data-rel-y="0" data-scale="50">
+      <img src="resources/img/6_cloud_abstract.svg"/>
+    </div>
+
+    <!-- ------------------- -->
+
+    <div id="hpc-overview" class="step slide overview markdown" data-rel-x="100000" data-rel-y="0" data-scale="50">
+      # On-demand setup (HPC)
+    </div>
+
+    <div id="hpc1" class="step slide" data-rel-x="-33000" data-rel-y="10000" data-scale="22">
+      <h1>Split up of actinia into manager and worker</h1>
+      <div class="mermaid">
+      graph TD;
+          manager(actinia manager)
+          worker(actinia worker)
+          redis(redis<br>job queue + resources);
+
+          manager --> redis;
+          worker --> redis;
+      </div>
+      <b>Queue</b>
+      <ul>
+        <li>Use job queue in redis</li>
+        <li>Use separate queue per job</li>
+        <li>Nevertheless use local queue for synchronous processes</li>
+        <li>Return queue name in actinia response</li>
+      </ul>
+      <b>Worker</b>
+      <ul>
+        <li>Pass queue name to worker on startup</li>
+        <li>Quit worker when queue is empty</li>
+      </ul>
+
+  </div>
+
+  <div id="hpc2" class="step slide" data-rel-x="33000" data-rel-y="0" data-scale="22">
+      <h1>HPC Deployment Example</h1>
+      <div class="mermaid">
+      graph TD
+          DS(Data Storage - DS)
+
+          subgraph Compute-Cloud
+          subgraph actinia-VM
+          DS1(DS)
+          manager(<b>actinia manager</b>)
+          keycloak(<b>Keycloak</b>)
+          postgres(Postgres)
+          end
+          subgraph redis-VM
+          redis(<b>redis<br>job queue + resources</b>)
+          end
+          end
+
+          subgraph HPC
+          subgraph login-node
+          DS2(DS)
+          end
+          subgraph compute-node
+          DS3(DS)
+          worker(<b>actinia worker</b>)
+          end
+          end
+
+          manager --> redis
+          worker --> redis
+          manager --> keycloak
+          keycloak --> postgres
+          DS -- mount --> DS1
+          DS -- mount --> DS2
+          DS -- mount --> DS3
+          DS1 -- mount --> manager
+          DS2 -- slurm --> worker
+          DS3 -- mount --> worker
+
+          subgraph Legend
+          docker
+          charliecloud
+          mount
+          end
+
+          classDef docker fill:#df65b0;
+          class docker,manager,keycloak,postgres,redis docker;
+          classDef charliecloud fill:#e9a3c9;
+          class charliecloud,worker charliecloud;
+          classDef ds fill:#a1d76a;
+          class mount,DS,DS1,DS2,DS3 ds;
+      </div>
+  </div>
+
+    <!-- Unfortunately sequenceDiagram not rendered nicely with impress.js
+    Therefore import to https://mermaid-js.github.io/mermaid-live-editor
+    and export as SVG -->
+    <div id="user-interaction" class="step slide markdown" data-rel-x="33000" data-rel-y="0" data-scale="22">
+        # User interaction
+        ![user interaction chart](resources/img/mermaid-diagram-2022-10-06-151139.svg)
+    </div>
+
+    <div class="step slide overview" data-rel-x="0" data-rel-y="1400" data-scale="16">
+    </div>
+
+    <div class="step slide overview" data-rel-x="0" data-rel-y="-1400" data-scale="22">
+    </div>
+
+    <div class="step slide overview markdown" data-rel-x="-33000" data-rel-y="-10000" data-scale="50">
+      # On-demand setup (HPC)
+
+      Alternatives to manual startup of worker:
+
+      - Workflow embedded in alternative workflow management system
+        - VM can be started e.g. with steep
+        - VM can be started with terraformer via ansible and terraform
+        - airflow can be used for recurring tasks (example for openEO exists)
+      - [Coming soon: full integration in actinia](https://github.com/orgs/mundialis/projects/1/views/12)
+
+    </div>
+
+    <div id="queue" class="step slide markdown" data-rel-x="0" data-rel-y="-50000" data-scale="50">
+      # Currently supported queue configuration
+
+      - `local`:  Single queue for all jobs, processed by same actinia instance via multiprocessing.
+      - `redis`:  Number of queues is equal to number of workers as set in config NUMBER_OF_WORKERS, processed by different actinia instances (actinia worker).
+      - `per_job`: Separate queue for each job, config for `NUMBER_OF_WORKERS` is ignored. Processed by different actinia instance (actinia worker).Resource_id will be added to above `WORKER_QUEUE_PREFIX`.
+
+      Future ideas:
+
+      - redis - separate queue per user
+      - redis - separate queue per process type
+      - redis - separate queue per resource consumption
+      `self.QUEUE_TYPE = "local"`
+    </div>
+
+    <div id="outlook" class="step slide" data-scale="50">
+      <h1>actinia in NVE ...?</h1>
+      <div class="mermaid">
+      graph TD
+          DS(Data Storage - DS)
+
+          user(User)
+          airflow-swarm(<b>airflow</b></br>using docker.swarm actinia)
+
+          subgraph Server with docker-swarm
+          DS1(DS)
+          actinia(<b>actinia</b>)
+          keycloak(<b>Keycloak</b>)
+          postgres(Postgres)
+          redis(<b>redis<br>job queue + resources</b>)
+          end
+
+          airflow-on-demand(<b>airflow</b></br>starting up separate actinia)
+
+          subgraph Server with docker on-demand
+          DS2(DS)
+          actinia2(<b>actinia</b>)
+          redis2(<b>redis<br>job queue + resources</b>)
+          end
+
+          actinia --> redis
+          actinia2 --> redis2
+          actinia --> keycloak
+          keycloak --> postgres
+          DS -- mount --> DS1
+          DS -- mount --> DS2
+          DS1 -- mount --> actinia
+          DS2 -- mount --> actinia2
+
+          user --> actinia
+          airflow-swarm --> actinia
+          airflow-on-demand --> actinia2
+
+          classDef docker fill:#df65b0;
+          class docker,actinia,actinia2,keycloak,postgres,redis,redis2 docker;
+          classDef ds fill:#a1d76a;
+          class mount,DS,DS1,DS2 ds;
+      </div>
+    </div>
+
+    <div id="thank-you" class="step overview" data-rel-x="-90000" data-rel-y="50000" data-scale="150">
+        </br></br></br>
+        <h1>Thank You!</h1>
+        <h1>Questions?</h1>
+    </div>
+</div>
+
+<div id="impress-toolbar"></div>
+<div class="impress-progressbar"><div></div></div>
+<div class="impress-progress"></div>
+<div id="impress-help"></div>
+<script type="text/javascript" src="./extras/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="./extras/mermaid/mermaid.min.js"></script>
+<script type="text/javascript" src="./extras/markdown/markdown.js"></script>
+<script type="text/javascript" src="./js/impress.js"></script>
+<script>impress().init();</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <title>actinia setup</title>
+    <link rel="shortcut icon" href="resources/img/mundialis_bildmarke_web.ico" type="image/x-icon">
+    <meta name="description" content="actinia setup" />
+    <meta name="author" content="Carmen Tawalika" />
+    <link rel="stylesheet" href="./extras/highlight/styles/github.css">
+    <link rel="stylesheet" href="./extras/mermaid/mermaid.css">
+    <link href="./css/impress-common.css" rel="stylesheet" />
+    <link href="./css/index.css" rel="stylesheet" />
+
+</head>
+
+<body class="impress-not-supported">
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="bg-shade"></div>
+
+<div id="impress"
+    data-transition-duration="1000"
+    data-width="1920"
+    data-height="1080"
+    data-perspective="1000"
+    >
+<div class="step slide markdown" data-rel-x="0" data-rel-y="0" data-scale="15">
+    # 1. Process chains and templates
+    [https://github.com/actinia-org/actinia-jupyter/blob/main/notebooks/actinia_process_chain.ipynb](https://github.com/actinia-org/actinia-jupyter/blob/main/notebooks/actinia_process_chain.ipynb)
+</div>
+
+<div class="step slide markdown" data-rel-x="-14000" data-rel-y="4200" data-scale="15">
+
+# 2. GRASS GIS addons
+- [official addons](https://github.com/OSGeo/grass-addons)
+- official addon example: [`r.colors.out_sld`](https://github.com/OSGeo/grass-addons/tree/grass8/src/raster/r.colors.out_sld)
+- mundialis example: [`t.in.eoarchive`](https://github.com/mundialis/t.in.eoarchive)
+- documentation example: [`r.colors.out_sld`](https://grass.osgeo.org/grass82/manuals/addons/r.colors.out_sld.html)
+- grass-example-addon coming soon
+- Installation
+    - install addon: `grass --tmp-location EPSG:4326 --exec g.extension -s extension=t.in.eoarchive url=https://github.com/mundialis/t.in.eoarchive`
+    - how to install addons in loop [see here](https://github.com/actinia-org/actinia-docker/blob/main/actinia-alpine/Dockerfile#L45-L47)
+- for each new developed addon:
+    - add to Dockerfile
+    - rebuild and redeploy - best use CI pipeline to rebuild and deploy
+
+</div>
+<div class="step slide markdown" data-rel-x="27000" data-rel-y="3700" data-scale="15">
+# 3. Endpoints
+[https://github.com/actinia-org/actinia-example-plugin](https://github.com/actinia-org/actinia-example-plugin)
+  </div>
+
+<div id="podium" class="step slide markdown" data-x="0" data-y="0" data-scale="45">
+    ![winner-podium](resources/img/winner.png)
+</div>
+</div>
+
+<div id="impress-toolbar"></div>
+<div class="impress-progressbar"><div></div></div>
+<div class="impress-progress"></div>
+<div id="impress-help"></div>
+<script type="text/javascript" src="./extras/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="./extras/mermaid/mermaid.min.js"></script>
+<script type="text/javascript" src="./extras/markdown/markdown.js"></script>
+<script type="text/javascript" src="./js/impress.js"></script>
+<script>impress().init();</script>
+
+</body>
+</html>
