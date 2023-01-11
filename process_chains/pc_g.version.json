@@ -1,0 +1,10 @@
+{
+  "list": [
+    {
+      "module": "g.version",
+      "id": "g.version_1",
+      "flags": "breg"
+    }
+  ],
+  "version": "1"
+}

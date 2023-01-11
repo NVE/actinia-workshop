@@ -1,0 +1,59 @@
+{
+    "list": [
+      {
+        "module": "v.in.ogr",
+        "id": "v_in_ogr_1",
+        "inputs": [
+          {
+            "param": "input",
+            "value": "/hdata/fjernanalyse3/CopernicusUtviklingOgTest/actinia-workshop/folgefonna_bresjoeoutline.gpkg"
+          }
+        ],
+        "outputs": [
+          {
+            "param": "output",
+            "value": "folgefonna"
+          }
+        ],
+        "flags": "o"
+      },
+      {
+        "module": "g.region",
+        "id": "g_region_1",
+        "inputs": [
+          {
+            "param": "vector",
+            "value": "folgefonna"
+          },
+          {
+            "param": "align",
+            "value": "DTM_10m@DTM"
+          }
+
+        ],
+        "flags": "g"
+      },
+      {
+        "module": "r.slope.aspect",
+        "id": "r_slope_aspect_1",
+        "inputs": [
+          {
+            "param": "elevation",
+            "value": "DTM_10m@DTM"
+          }
+        ],
+        "outputs": [
+          {
+            "export": {
+              "format": "GTiff",
+              "type": "raster"
+            },
+            "param": "slope",
+            "value": "dtm_10m_slope"
+          }
+        ],
+        "flags": "a"
+      }
+    ],
+    "version": "1"
+}
